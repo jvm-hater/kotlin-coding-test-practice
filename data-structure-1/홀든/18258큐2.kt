@@ -1,74 +1,83 @@
 import java.io.BufferedReader
+import java.io.BufferedWriter
 import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 
+val br = BufferedReader(InputStreamReader(System.`in`))
+val bw = BufferedWriter(OutputStreamWriter(System.`out`))
+//계속 시간 초과 발생해서 ArrayDeque로 변경하니 성공..? ArrayList보다 ArrayDeque성능이 더 빠른가..?
 fun main() {
-    val br = BufferedReader(InputStreamReader(System.`in`))
+
+
     val inputCount = br.readLine().toInt()
-    val stack = mutableListOf<Int>()
+    val queue = ArrayDeque<Int>()
     for (i in 0 until inputCount) {
         val command = br.readLine()
-        chooseQueueCommand(command, stack)
+        chooseQueueCommand(command, queue)
     }
+    bw.flush()
+    bw.close()
 
 }
 
-fun chooseQueueCommand(command: String, stack: MutableList<Int>) {
+fun chooseQueueCommand(command: String, queue: ArrayDeque<Int>) {
+    val commandArray = command.split(" ")
+    when (commandArray[0]) {
+        "push" -> {
+            queue.add(commandArray[1].toInt())
+        }
+        "pop" -> {
+            queue.pop()
 
-    if (command.contains("push")) {
-        stack.push(command.split(" ").last().toInt())
-    }
-    if (command.contains("pop")) {
-        stack.pop()
-    }
-    if (command.contains("front")) {
-        stack.front()
-    }
-    if (command.contains("back")) {
-        stack.back()
-    }
-    if (command.contains("empty")) {
-        stack.empty()
-    }
-    if (command.contains("size")) {
-        println(stack.size)
-    }
+        }
+        "front" -> {
+            queue.front()
 
+        }
+        "back" -> {
+            queue.back()
+
+        }
+        "empty" -> {
+            queue.empty()
+
+        }
+        "size" -> {
+            bw.write("${queue.size}\n")
+
+        }
+    }
 }
 
-fun MutableList<Int>.push(value: Int) {
-    add(value)
-}
-
-fun MutableList<Int>.front() {
+fun ArrayDeque<Int>.front() {
     if (this.isEmpty()) {
-        println(-1)
+        bw.write("-1\n")
     } else {
-        println(this.first())
+        bw.write("${this[0]}\n")
     }
 }
-fun MutableList<Int>.back() {
+
+fun ArrayDeque<Int>.back() {
     if (this.isEmpty()) {
-        println(-1)
+        bw.write("-1\n")
     } else {
-        println(this.last())
+        bw.write("${this[this.size-1]}\n")
     }
 }
 
 
-fun MutableList<Int>.pop() {
+fun ArrayDeque<Int>.pop() {
     if (this.isEmpty()) {
-        println(-1)
-        return
+        bw.write("-1\n")
+    }else {
+        bw.write("${removeAt(0)}\n")
     }
-    val topValue = this.first()
-    removeFirst()
-    println(topValue)
 }
 
-fun MutableList<Int>.empty() {
+fun ArrayDeque<Int>.empty() {
     if (this.isEmpty()) {
-        println(1)
+        bw.write("1\n")
     } else {
-        println(0)
+        bw.write("0\n")
     }
 }
